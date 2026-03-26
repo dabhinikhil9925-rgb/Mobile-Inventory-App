@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Mobile Stock Audit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Store Ops</p>
+        <h1>Mobile Inventory Control</h1>
+        <p class="hero-copy">Search stock fast, add phones by IMEI, run weekly audits, and sell with scan-first verification.</p>
+      </div>
+      <div class="hero-stats" id="heroStats"></div>
+    </header>
+
+    <main class="layout">
+      <section class="panel panel-search">
+        <div class="panel-head">
+          <div>
+            <p class="section-kicker">Dashboard</p>
+            <h2>Search live stock and MOP</h2>
+          </div>
+          <button class="secondary" id="seedDemoBtn" type="button">Load demo data</button>
+        </div>
+        <label class="field">
+          <span>Search by brand, model, variant, color, or IMEI</span>
+          <input id="searchInput" type="search" placeholder="Try: Samsung 8/128 Black or IMEI">
+        </label>
+        <div class="inventory-list" id="inventoryList"></div>
+      </section>
+
+      <section class="panel panel-form">
+        <div class="panel-head">
+          <div>
+            <p class="section-kicker">Stock Intake</p>
+            <h2>Add product and IMEI units</h2>
+          </div>
+        </div>
+        <form id="addProductForm" class="stack">
+          <div class="grid two">
+            <label class="field">
+              <span>Brand</span>
+              <select name="brand" required>
+                <option value="">Select brand</option>
+                <option>Apple</option>
+                <option>Samsung</option>
+                <option>OnePlus</option>
+                <option>Xiaomi</option>
+                <option>Vivo</option>
+                <option>Oppo</option>
+                <option>Realme</option>
+                <option>Motorola</option>
+                <option>Google</option>
+                <option>Nothing</option>
+                <option>Lava</option>
+                <option>Tecno</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Model</span>
+              <input name="model" type="text" placeholder="iPhone 15" required>
+            </label>
+          </div>
+          <div class="grid three">
+            <label class="field">
+              <span>Variant</span>
+              <select name="variant" required>
+                <option value="">Select variant</option>
+                <option>3/64</option>
+                <option>4/64 LTE</option>
+                <option>4GB/64GB</option>
+                <option>4/128</option>
+                <option>6GB/128GB</option>
+                <option>8GB/128GB</option>
+                <option>8GB/256GB</option>
+                <option>12GB/256GB</option>
+                <option>12GB/512GB</option>
+                <option>16GB/512GB</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Color</span>
+              <input name="color" type="text" placeholder="Blue" required>
+            </label>
+          </div>
+          <div class="grid two">
+            <label class="field">
+              <span>MOP</span>
+              <input name="mop" type="number" min="0" step="0.01" placeholder="69999" required>
+            </label>
+            <label class="field">
+              <span>Staff name</span>
+              <input name="staffName" type="text" placeholder="Ravi" required>
+            </label>
+          </div>
+          <label class="field">
+            <span>IMEI</span>
+            <input name="imei" type="text" inputmode="numeric" placeholder="One mobile, one IMEI" required>
+          </label>
+          <div class="scan-actions">
+            <button class="secondary" type="button" id="scanAddImeiBtn">Scan IMEI</button>
+            <button class="primary" type="submit">Add stock unit</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="section-kicker">Sales</p>
+            <h2>Sell by IMEI scan</h2>
+          </div>
+        </div>
+        <form id="sellForm" class="stack">
+          <div class="grid two">
+            <label class="field">
+              <span>Staff name</span>
+              <input name="staffName" type="text" placeholder="Anita" required>
+            </label>
+            <label class="field">
+              <span>Customer description</span>
+              <input name="customerNote" type="text" placeholder="Walk-in customer, paid by card" required>
+            </label>
+          </div>
+          <label class="field">
+            <span>IMEI</span>
+            <input name="imei" type="text" placeholder="Scan or enter IMEI" required>
+          </label>
+          <div class="scan-actions">
+            <button class="secondary" type="button" id="scanSellImeiBtn">Scan for sale</button>
+            <button class="primary" type="submit">Complete sale</button>
+          </div>
+        </form>
+        <div id="sellPreview" class="message subtle">Scan or enter an IMEI to preview the device before selling.</div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="section-kicker">Weekly Audit</p>
+            <h2>Audit stock unit by unit</h2>
+          </div>
+        </div>
+        <form id="auditForm" class="stack">
+          <div class="grid two">
+            <label class="field">
+              <span>Auditor name</span>
+              <input name="auditorName" type="text" placeholder="Store lead" required>
+            </label>
+            <label class="field">
+              <span>Audit label</span>
+              <input name="auditLabel" type="text" placeholder="Week 13 audit" required>
+            </label>
+          </div>
+          <label class="field">
+            <span>Scanned IMEIs</span>
+            <textarea name="auditImeis" rows="5" placeholder="Scan or paste IMEIs counted in store" required></textarea>
+          </label>
+          <div class="scan-actions">
+            <button class="secondary" type="button" id="scanAuditImeiBtn">Scan into audit</button>
+            <button class="primary" type="submit">Run audit</button>
+          </div>
+        </form>
+        <div id="auditResults" class="audit-results"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="section-kicker">Manager View</p>
+            <h2>Activity and exceptions</h2>
+          </div>
+        </div>
+        <div id="logList" class="log-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="scannerDialog" class="scanner-dialog">
+    <form method="dialog" class="scanner-card">
+      <div class="panel-head">
+        <div>
+          <p class="section-kicker">Scanner</p>
+          <h2 id="scannerTitle">Scan IMEI</h2>
+        </div>
+        <button class="ghost" type="submit">Close</button>
+      </div>
+      <video id="scannerVideo" autoplay playsinline muted></video>
+      <p id="scannerStatus" class="message subtle">Allow camera access and point at the IMEI barcode.</p>
+      <label class="field">
+        <span>Manual fallback IMEI</span>
+        <input id="manualScannerInput" type="text" placeholder="Enter IMEI if barcode is damaged">
+      </label>
+      <div class="scan-actions">
+        <button class="secondary" type="button" id="manualScannerSubmit">Use manual IMEI</button>
+      </div>
+    </form>
+  </dialog>
+
+  <template id="inventoryCardTemplate">
+    <article class="inventory-card">
+      <div class="inventory-card__head">
+        <div>
+          <h3 class="inventory-title"></h3>
+          <p class="inventory-meta"></p>
+        </div>
+        <span class="badge quantity-badge"></span>
+      </div>
+      <div class="inventory-card__details">
+        <span class="price-chip"></span>
+        <span class="status-chip"></span>
+      </div>
+      <p class="inventory-imeis"></p>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
