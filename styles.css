@@ -228,11 +228,18 @@ button {
   padding: 0.95rem 1.2rem;
   min-height: 48px;
   cursor: pointer;
+  transition: transform 120ms ease, opacity 120ms ease, box-shadow 120ms ease, background 120ms ease;
 }
 
 button:disabled {
   cursor: wait;
-  opacity: 0.65;
+  opacity: 0.72;
+}
+
+button.is-busy {
+  position: relative;
+  box-shadow: 0 0 0 3px rgba(197, 90, 17, 0.12);
+  transform: translateY(-1px);
 }
 
 button.primary {
@@ -253,6 +260,11 @@ button.ghost {
   padding: 1rem;
   background: rgba(255, 255, 255, 0.88);
   border: 1px solid rgba(86, 60, 40, 0.12);
+}
+
+.message.loading {
+  color: var(--brand-dark);
+  font-weight: 600;
 }
 
 .inventory-card__details {

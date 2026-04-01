@@ -53,6 +53,10 @@ const authActionButtons = [
   dom.resetPasswordBtn
 ].filter(Boolean);
 
+const authButtonLabels = new Map(
+  authActionButtons.map((button) => [button, button.textContent])
+);
+
 let scannerController = null;
 let lastDetectedCode = "";
 
@@ -178,7 +182,7 @@ async function handleSignIn(event) {
   }
 
   let error;
-  setAuthBusy(true, "Signing in...");
+  setAuthBusy(true, dom.authForm?.querySelector('button[type="submit"]'), "Signing in...");
   try {
     ({ error } = await supabase.auth.signInWithPassword({ email, password }));
   } finally {
@@ -209,7 +213,7 @@ async function handleSignUp() {
 
   let data;
   let error;
-  setAuthBusy(true, "Creating account...");
+  setAuthBusy(true, dom.signUpBtn, "Creating account...");
   try {
     ({ data, error } = await supabase.auth.signUp({
       email,
@@ -250,7 +254,7 @@ async function handleResendConfirmation() {
   }
 
   let error;
-  setAuthBusy(true, "Sending confirmation...");
+  setAuthBusy(true, dom.resendConfirmationBtn, "Sending confirmation...");
   try {
     ({ error } = await supabase.auth.resend({
       type: "signup",
@@ -283,7 +287,7 @@ async function handleResetPassword() {
   }
 
   let error;
-  setAuthBusy(true, "Sending reset link...");
+  setAuthBusy(true, dom.resetPasswordBtn, "Sending reset link...");
   try {
     ({ error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: getAuthRedirectUrl()
@@ -854,14 +858,17 @@ function setMessage(element, message, type) {
   element.textContent = message;
 }
 
-function setAuthBusy(isBusy, label = "Working...") {
+function setAuthBusy(isBusy, activeButton = null, label = "Working...") {
   authActionButtons.forEach((button) => {
     button.disabled = isBusy;
+    button.classList.toggle("is-busy", isBusy && button === activeButton);
+    button.textContent = isBusy && button === activeButton
+      ? label
+      : authButtonLabels.get(button) || button.textContent;
   });
 
-  const submitButton = dom.authForm?.querySelector('button[type="submit"]');
-  if (submitButton) {
-    submitButton.textContent = isBusy ? label : "Sign in";
+  if (isBusy) {
+    setMessage(dom.authMessage, `${label} Please wait...`, "loading");
   }
 }
 
